@@ -9,8 +9,8 @@ namespace ISC_System_API.Model
     [Table("COURSE_TRAINING")]
     public class CourseTraining
     {
-        public virtual Cours Cours { get; set; }
-        public virtual SpecializedTraining SpecializedTraining { get; set; }
+        public virtual Course Courses { get; set; }
+        public virtual SpecializedTraining SpecializedTrainings { get; set; }
         
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +13,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace ISC_System_API
 {
@@ -36,12 +40,33 @@ namespace ISC_System_API
                 .AddJsonOptions(option => {
                     option.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
                 });
-            services.AddCors(Options =>
+
+            services.AddCors(options =>
             {
-                Options.AddPolicy("AllowAllHeaders",
-                    builder => {
-                        builder.WithOrigins("*").AllowAnyHeader();
-                    });
+                options.AddPolicy("AllowAllHeaders",
+                builder =>
+                {
+                    builder.WithOrigins("*")
+                           .AllowAnyHeader()
+                           .AllowAnyOrigin()
+                           .AllowCredentials()
+                           .AllowAnyMethod();
+                });
+            });
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    RequireExpirationTime = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = "mysite.com",
+                    ValidAudience = "mysite.com",
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Utils.Helper.OAuthKey))
+                };
             });
         }
 
@@ -58,6 +83,8 @@ namespace ISC_System_API
                 app.UseHsts();
             }
 
+            app.UseCors("AllowAllHeaders");
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
         }

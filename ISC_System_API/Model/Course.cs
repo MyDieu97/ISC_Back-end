@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace ISC_System_API.Model
 {
     [Table("COURSES")]
-    public class Cours
+    public class Course
     {
         [Key]
         [Column("COURSEID")]

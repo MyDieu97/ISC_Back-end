@@ -17,7 +17,7 @@ namespace ISC_System_API.Model
         public Nullable<int> COURSEID { get; set; }
         public Nullable<System.DateTime> TESTDATE { get; set; }
 
-        public virtual Cours COURS { get; set; }
+        public virtual Course COURSES { get; set; }
         public virtual SubjectEntranceTest SUBJECTS_ENTRANCETESTS { get; set; }
     }
 }

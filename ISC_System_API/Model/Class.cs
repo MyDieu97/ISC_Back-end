@@ -23,7 +23,7 @@ namespace ISC_System_API.Model
         public Nullable<double> PercentBan { get; set; } 
         public Nullable<double> PASSINGSCORE { get; set; }
         public virtual ICollection<LearningResult> LEARNINGRESULTs { get; set; }
-        public virtual Cours COURS { get; set; }
+        public virtual Course COURSE { get; set; }
         public virtual Subject SUBJECT { get; set; }
         public virtual ICollection<LecturerClasses> LECTURER_CLASSES { get; set; }
     }

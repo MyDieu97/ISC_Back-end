@@ -18,6 +18,6 @@ namespace ISC_System_API.Model
         public string Name { get; set; }
         [Range(1,99)]
         public Nullable<short> NUMBERWEEK { get; set; }
-        public virtual ICollection<Cours> COURSES { get; set; }
+        public virtual ICollection<Course> COURSES { get; set; }
     }
 }
