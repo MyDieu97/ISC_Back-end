@@ -23,7 +23,7 @@ namespace ISC_System_API
         public virtual DbSet<EntranceTest> EntranceTest { get; set; }
         public virtual DbSet<ExaminationSubject> ExaminationSubjects { get; set; }
         public virtual DbSet<LearningResult> LearningResults { get; set; }
-        public virtual DbSet<Lecture> Lectures { get; set; }
+        public virtual DbSet<Lecturer> Lectures { get; set; }
         public virtual DbSet<LecturerClasses> LecturerClasses { get; set; }
         public virtual DbSet<Major> Majors { get; set; }
         public virtual DbSet<SpecializedTraining> SpecializedTrainings { get; set; }

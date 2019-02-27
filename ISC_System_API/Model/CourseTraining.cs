@@ -10,6 +10,7 @@ namespace ISC_System_API.Model
     public class CourseTraining
     {
         public virtual Cours Cours { get; set; }
+
         public virtual SpecializedTraining SpecializedTraining { get; set; }
         
     }

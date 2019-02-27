@@ -32,17 +32,21 @@ namespace ISC_System_API
         {
             string connectionString = Configuration.GetConnectionString("DefaultConection");
             services.AddDbContext<Context>(option => option.UseSqlServer(connectionString));
+            
+            services.AddCors(Options =>
+            {
+                Options.AddPolicy("AllowAll",
+                    builder => {
+                        builder.AllowAnyOrigin()
+                               .AllowAnyMethod()
+                               .AllowAnyHeader()
+                               .AllowCredentials();
+                    });
+            });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(option => {
                     option.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
                 });
-            services.AddCors(Options =>
-            {
-                Options.AddPolicy("AllowAllHeaders",
-                    builder => {
-                        builder.WithOrigins("*").AllowAnyHeader();
-                    });
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,6 +63,7 @@ namespace ISC_System_API
             }
 
             app.UseHttpsRedirection();
+            app.UseCors("AllowAll");
             app.UseMvc();
         }
     }

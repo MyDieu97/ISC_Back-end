@@ -11,15 +11,26 @@ namespace ISC_System_API.Model
     public class Worktrack
     {
         [Key]
+        public int ID { get; set; }
+
         public int COMPANYID { get; set; }
+
         public Nullable<int> IDSTUDENT { get; set; }
+
         [DataType(DataType.Date)]
         public Nullable<System.DateTime> STARTDATE { get; set; }
+
         [DataType(DataType.Date)]
         public Nullable<System.DateTime> CONTRACTDATE { get; set; }
+
         public Nullable<byte> STATUS { get; set; }
+
         public string NOTE { get; set; }
+
+        [ForeignKey("COMPANYID")]
         public virtual Company Company { get; set; }
+
+        [ForeignKey("IDSTUDENT")]
         public virtual Student STUDENT { get; set; }
     }
 }

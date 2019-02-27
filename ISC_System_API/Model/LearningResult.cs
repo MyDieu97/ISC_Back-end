@@ -12,13 +12,19 @@ namespace ISC_System_API.Model
     {
         [Key]
         public int ID { get; set; }
+
         [Required]
         public Nullable<int> CLASSID { get; set; }
+
         [Required]
         public Nullable<int> IDSTUDENT { get; set; }
+
         public Nullable<double> AVGSCORE { get; set; }
 
+        [ForeignKey("CLASSID")]
         public virtual Class CLASS { get; set; }
+
+        [ForeignKey("IDSTUDENT")]
         public virtual Student STUDENT { get; set; }
     }
 }

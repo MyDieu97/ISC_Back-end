@@ -12,8 +12,11 @@ namespace ISC_System_API.Model
     {
         [Key]
         public int Id { get; set; }
+
         [Column("DegreeName")]
         public string Name { get; set; }
-        public virtual ICollection<Lecture> Lectures { get; set; }
+
+        [ForeignKey("DEGREE")]
+        public virtual ICollection<Lecturer> Lectures { get; set; }
     }
 }

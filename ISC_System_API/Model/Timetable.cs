@@ -13,10 +13,13 @@ namespace ISC_System_API.Model
         [Key]
         [Column("IDRECORD")]
         public int Id { get; set; }
+
         [DataType(DataType.Date)]
         public Nullable<System.DateTime> STARTDATE { get; set; }
+
         [DataType(DataType.Date)]
         public Nullable<System.DateTime> ENDDATE { get; set; }
+
         public virtual ICollection<Timetable> DETAILSTIMETABLEs { get; set; }
     }
 }

@@ -13,8 +13,10 @@ namespace ISC_System_API.Model
         [Key]
         [Column("UNIVERSITYID")]
         public int Id { get; set; }
+
         [Column("UNIVERSITYNAME")]
         public string Name { get; set; }
+
         public virtual ICollection<Student> STUDENTS { get; set; }
     }
 }

@@ -13,15 +13,21 @@ namespace ISC_System_API.Model
         [Key]
         [Column("COMPANYID")]
         public int Id { get; set; }
+
         [Column("COMPANYNAME")]
         [StringLength(200)]
         public string Name { get; set; }
+
         public string DIACHI { get; set; }
+
         public string CONTECTPERSON { get; set; }
+
         [Phone]
         public string PHONE { get; set; }
+
         public Nullable<byte> STATUS { get; set; }
 
-        public virtual Worktrack WORKTRACK { get; set; }
+        //[ForeignKey("SUBJECTID")]
+        public virtual ICollection<Worktrack> WORKTRACK { get; set; }
     }
 }

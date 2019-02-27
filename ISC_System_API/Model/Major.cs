@@ -13,9 +13,11 @@ namespace ISC_System_API.Model
         [Key]
         [Column("MAJORID")]
         public int Id { get; set; }
+
         [Column("MAJORNAME")]
         [StringLength(200)]
         public string Name { get; set; }
+
         public virtual ICollection<Student> STUDENTS { get; set; }
     }
 }

@@ -13,8 +13,10 @@ namespace ISC_System_API.Model
         [Key]
         [Column("SUBJECTID")]
         public int Id { get; set; }
+
         [Column("SUBJECTNAME")]
         public string Name { get; set; }
+
         public virtual ICollection<SubjectEntranceTest> SUBJECTS_ENTRANCETESTS { get; set; }
     }
 }

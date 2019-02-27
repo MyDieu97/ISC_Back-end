@@ -22,9 +22,10 @@ namespace ISC_System_API.Controllers
         }
         // GET: api/<controller>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ClassRoom>>> Get()
+        public async Task<ActionResult<BaseRespone>> Get()
         {
-            return await _context.ClassRooms.ToListAsync();
+            var classroom= await _context.ClassRooms.ToListAsync();
+            return new BaseRespone(classroom);
         }
 
         // GET api/<controller>/5

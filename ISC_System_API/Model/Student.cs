@@ -13,20 +13,33 @@ namespace ISC_System_API.Model
         [Key]
         [Column("IDSTUDENT")]
         public int Id { get; set; }
+
         [Column("UNIVERSITYID")]
         public Nullable<int> UniverId { get; set; }
+
         public Nullable<int> MAJORID { get; set; }
-        public Nullable<int> IDUSER { get; set; }
+
         public Nullable<int> USERID { get; set; }
-        public Nullable<byte> CERTIFICATION { get; set; }
+
+        public Nullable<bool> CERTIFICATION { get; set; }
+
         [DataType(DataType.Date)]
-        public Nullable<System.DateTime> NGAYSANSANG { get; set; }
+        public Nullable<System.DateTime> DATEREADYTOWORK { get; set; }
+
         [Required]
         public Nullable<bool> DEPOSITS { get; set; }
+
         public virtual ICollection<LearningResult> LEARNINGRESULTs { get; set; }
+
+        [ForeignKey("MAJORID")]
         public virtual Major MAJOR { get; set; }
+
+        [ForeignKey("UNIVERSITYID")]
         public virtual University UNIVERSITY { get; set; }
+
+        [ForeignKey("USERID")]
         public virtual User USER { get; set; }
+
         public virtual ICollection<Worktrack> WORKTRACKS { get; set; }
     }
 }
