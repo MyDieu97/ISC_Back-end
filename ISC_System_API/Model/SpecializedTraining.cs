@@ -12,12 +12,11 @@ namespace ISC_System_API.Model
     {
         [Key]
         [Column("TRAININGID")]
-        public int Id { get; set; }
+        public int TrainingId { get; set; }
         [Column("TRAININGNAME")]
         [StringLength(200)]
         public string Name { get; set; }
         [Range(1,99)]
-        public Nullable<short> NUMBERWEEK { get; set; }
-        public virtual ICollection<Course> COURSES { get; set; }
+        public Nullable<short> NUMBERWEEK { get; set; }       
     }
 }

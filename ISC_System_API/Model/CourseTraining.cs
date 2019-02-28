@@ -9,8 +9,13 @@ namespace ISC_System_API.Model
     [Table("COURSE_TRAINING")]
     public class CourseTraining
     {
-        public virtual Course Courses { get; set; }
-        public virtual SpecializedTraining SpecializedTrainings { get; set; }
-        
+        public int CourseId { get; set; }
+        public int TrainingId { get; set; }
+
+        [ForeignKey("CourseId")]
+        public virtual ICollection<Course> COURSES { get; set; }
+        [ForeignKey("TrainingId")]
+        public virtual SpecializedTraining SPECIALIZEDTRAININGS { get; set; }
+
     }
 }

@@ -13,7 +13,7 @@ namespace ISC_System_API.Model
     {
         [Key]
         [Column("COURSEID")]
-        public int Id { get; set; }
+        public int CourseId { get; set; }
         [Column("COURSENAME")]
         public string Name { get; set; }
         [DataType(DataType.Date)]
@@ -21,7 +21,5 @@ namespace ISC_System_API.Model
         [DataType(DataType.Date)]
         public Nullable<System.DateTime> ENDDATE { get; set; }
         public string NOTE { get; set; }
-        public virtual ICollection<Class> CLASSES { get; set; }
-        public virtual ICollection<EntranceTest> ENTRANCETESTS { get; set; }
     }
 }

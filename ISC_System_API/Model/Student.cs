@@ -20,10 +20,10 @@ namespace ISC_System_API.Model
         public Nullable<int> USERID { get; set; }
         public Nullable<byte> CERTIFICATION { get; set; }
         [DataType(DataType.Date)]
-        public Nullable<System.DateTime> NGAYSANSANG { get; set; }
+        public Nullable<System.DateTime> READYWORKDATE { get; set; }
         [Required]
         public Nullable<bool> DEPOSITS { get; set; }
-        public virtual ICollection<LearningResult> LEARNINGRESULTs { get; set; }
+        public virtual ICollection<LearningResult> LEARNINGRESULTS { get; set; }
         public virtual Major MAJOR { get; set; }
         public virtual University UNIVERSITY { get; set; }
         public virtual User USER { get; set; }

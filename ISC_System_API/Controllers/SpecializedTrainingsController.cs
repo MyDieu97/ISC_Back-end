@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ISC_System_API;
+using ISC_System_API.Model.Respone;
 using ISC_System_API.Model;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ISC_System_API.Controllers
 {
@@ -23,30 +25,63 @@ namespace ISC_System_API.Controllers
 
         // GET: api/SpecializedTrainings
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SpecializedTraining>>> GetSpecializedTrainings()
+        public async Task<ActionResult<BaseRespone>> GetAllSpecializedTrainings()
         {
-            return await _context.SpecializedTrainings.ToListAsync();
+            List<SpecializedTraining> list = await _context.SpecializedTrainings
+                .AsNoTracking()
+                .Select(x => new SpecializedTraining
+                {
+                    TrainingId = x.TrainingId,
+                    Name = x.Name,
+                    NUMBERWEEK = x.NUMBERWEEK
+                })
+                .ToListAsync();
+            BaseRespone result = new BaseRespone();
+            if (list != null)
+            {
+                result.ErrorCode = 0;
+                result.Data = list;
+            }
+            else {
+                result.ErrorCode = 1;
+                result.Message = "Data is not available!";
+            }
+            return result;
         }
 
         // GET: api/SpecializedTrainings/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<SpecializedTraining>> GetSpecializedTraining(int id)
+        public async Task<ActionResult<BaseRespone>> GetSpecializedTraining(int id)
         {
-            var specializedTraining = await _context.SpecializedTrainings.FindAsync(id);
+            BaseRespone result = new BaseRespone();
+            var item = await _context.SpecializedTrainings
+                .AsNoTracking()
+                .Select(x => new SpecializedTraining
+                {
+                    TrainingId = x.TrainingId,
+                    Name = x.Name,
+                    NUMBERWEEK = x.NUMBERWEEK
+                })
+                .FirstOrDefaultAsync(x => x.TrainingId == id);
 
-            if (specializedTraining == null)
+            if (item == null)
             {
-                return NotFound();
+                result.ErrorCode = 404;
+                result.Message = "Not found";
             }
-
-            return specializedTraining;
+            else {
+                result.ErrorCode = 0;
+                result.Data = item;
+            }
+            return result;
         }
 
         // PUT: api/SpecializedTrainings/5
         [HttpPut("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> PutSpecializedTraining(int id, SpecializedTraining specializedTraining)
         {
-            if (id != specializedTraining.Id)
+            if (id != specializedTraining.TrainingId)
             {
                 return BadRequest();
             }
@@ -74,33 +109,59 @@ namespace ISC_System_API.Controllers
 
         // POST: api/SpecializedTrainings
         [HttpPost]
-        public async Task<ActionResult<SpecializedTraining>> PostSpecializedTraining(SpecializedTraining specializedTraining)
+        [AllowAnonymous]
+        public async Task<ActionResult<BaseRespone>> PostSpecializedTraining(SpecializedTraining specializedTraining)
         {
-            _context.SpecializedTrainings.Add(specializedTraining);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.SpecializedTrainings.Add(specializedTraining);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSpecializedTraining", new { id = specializedTraining.Id }, specializedTraining);
+                return new BaseRespone
+                {
+                    Message = "Add successfully!"
+                };
+            }
+            catch
+            {
+                return new BaseRespone
+                {
+                    Message = "Add fail!"
+                };
+            }
+            //_context.SpecializedTrainings.Add(specializedTraining);
+            //await _context.SaveChangesAsync();
+
+            //return CreatedAtAction("GetSpecializedTraining", new { id = specializedTraining.TrainingId }, specializedTraining);
         }
+
 
         // DELETE: api/SpecializedTrainings/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<SpecializedTraining>> DeleteSpecializedTraining(int id)
+        [AllowAnonymous]
+        public async Task<ActionResult<BaseRespone>> DeleteSpecializedTraining(int id)
         {
             var specializedTraining = await _context.SpecializedTrainings.FindAsync(id);
             if (specializedTraining == null)
             {
-                return NotFound();
+                return new BaseRespone {
+                    ErrorCode = 1,
+                    Message = "Object does not exist!"
+                };
             }
 
             _context.SpecializedTrainings.Remove(specializedTraining);
             await _context.SaveChangesAsync();
 
-            return specializedTraining;
+            return new BaseRespone {
+                ErrorCode = 0,
+                Message = "Object was deleted!"
+            };
         }
 
         private bool SpecializedTrainingExists(int id)
         {
-            return _context.SpecializedTrainings.Any(e => e.Id == id);
+            return _context.SpecializedTrainings.Any(e => e.TrainingId == id);
         }
     }
 }

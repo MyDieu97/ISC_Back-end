@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ISC_System_API;
 using ISC_System_API.Model;
+using ISC_System_API.Model.Respone;
 
 namespace ISC_System_API.Controllers
 {
@@ -23,30 +24,58 @@ namespace ISC_System_API.Controllers
 
         // GET: api/Courses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Course>>> GetCourses()
+        public async Task<ActionResult<BaseRespone>> GetAllCourses()
         {
-            return await _context.Courses.ToListAsync();
+            List<Course> list = await _context.Courses
+                .AsNoTracking()
+                .Select(x => new Course
+                {
+                    CourseId = x.CourseId,
+                    Name = x.Name,
+                    STARTDATE = x.STARTDATE,
+                    ENDDATE = x.ENDDATE,
+                    NOTE = x.NOTE
+                })
+                .ToListAsync();
+            BaseRespone result = new BaseRespone();
+            if (list != null)
+            {
+                result.ErrorCode = 0;
+                result.Data = list;
+            }
+            else
+            {
+                result.ErrorCode = 1;
+                result.Message = "Data is not available!";
+            }
+            return result;
         }
 
         // GET: api/Courses/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Course>> GetCourse(int id)
+        public async Task<ActionResult<BaseRespone>> GetCourse(int id)
         {
             var course = await _context.Courses.FindAsync(id);
 
             if (course == null)
             {
-                return NotFound();
+                return new BaseRespone {
+                    ErrorCode = 1,
+                    Message = "Object does not exist!"
+                };
             }
 
-            return course;
+            return new BaseRespone {
+                ErrorCode = 0,
+                Data = course
+            };
         }
 
         // PUT: api/Courses/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCourse(int id, Course course)
         {
-            if (id != course.Id)
+            if (id != course.CourseId)
             {
                 return BadRequest();
             }
@@ -79,28 +108,36 @@ namespace ISC_System_API.Controllers
             _context.Courses.Add(course);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCourse", new { id = course.Id }, course);
+            return CreatedAtAction("GetCourse", new { id = course.CourseId }, course);
         }
 
         // DELETE: api/Courses/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Course>> DeleteCourse(int id)
+        public async Task<ActionResult<BaseRespone>> DeleteCourse(int id)
         {
             var course = await _context.Courses.FindAsync(id);
             if (course == null)
             {
-                return NotFound();
+                return new BaseRespone
+                {
+                    ErrorCode = 1,
+                    Message = "Object does not exist!"
+                };
             }
 
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync();
 
-            return course;
+            return new BaseRespone
+            {
+                ErrorCode = 0,
+                Message = "Object was deleted!"
+            };
         }
 
         private bool CourseExists(int id)
         {
-            return _context.Courses.Any(e => e.Id == id);
+            return _context.Courses.Any(e => e.CourseId == id);
         }
     }
 }
