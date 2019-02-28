@@ -28,8 +28,8 @@ namespace ISC_System_API.Model
         public string ADDRESS { get; set; }
         [Required]
         public Nullable<bool> IsStudent { get; set; }
-        public virtual Lecture LECTURE { get; set; }
-        public virtual ICollection<Student> STUDENTS { get; set; }
-        public virtual ICollection<TestResult> TestResults { get; set; }
+        //public virtual Lecturer LECTURER { get; set; }
+        //public virtual Student STUDENT { get; set; }
+        //public virtual ICollection<TestResult> TestResults { get; set; }
     }
 }
