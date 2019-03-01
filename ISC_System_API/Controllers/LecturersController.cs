@@ -76,6 +76,7 @@ namespace ISC_System_API.Controllers
             updatedLecturer.STARTDAY = lecturer.STARTDAY;
             updatedLecturer.USERID = lecturer.USERID;
             updatedLecturer.USE_USERID = lecturer.USE_USERID;
+            _context.Lectures.Update(updatedLecturer);
             await _context.SaveChangesAsync();
             return new BaseRespone
             {
