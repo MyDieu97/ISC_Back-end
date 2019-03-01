@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ISC_System_API;
 using ISC_System_API.Model;
+using ISC_System_API.Respone;
 
 namespace ISC_System_API.Controllers
 {
@@ -23,79 +24,106 @@ namespace ISC_System_API.Controllers
 
         // GET: api/Academics
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Academic>>> GetAcademics()
+        public async Task<ActionResult<BaseRespone>> GetAcademics()
         {
-            return await _context.Academics.ToListAsync();
+            return new BaseRespone
+            {
+                Message = "Get list success",
+                Data = await _context.Academics.ToListAsync()
+            };
         }
 
         // GET: api/Academics/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Academic>> GetAcademic(int id)
+        public async Task<ActionResult<BaseRespone>> GetAcademic(int id)
         {
             var academic = await _context.Academics.FindAsync(id);
 
             if (academic == null)
             {
-                return NotFound();
+                return new BaseRespone
+                {
+                    ErrorCode = 1,
+                    Message = "Not Found"
+                };
             }
 
-            return academic;
+            return new BaseRespone
+            {
+                Message = "Get success",
+                Data = academic
+            };
         }
 
         // PUT: api/Academics/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAcademic(int id, Academic academic)
+        public async Task<BaseRespone> PutAcademic(int id, Academic academic)
         {
-            if (id != academic.Id)
+            var updatedAcademic = await _context.Academics.FindAsync(id);
+            if (updatedAcademic == null)
             {
-                return BadRequest();
+                return new BaseRespone
+                {
+                    ErrorCode = 1,
+                    Message = "Not Found"
+                };
             }
 
-            _context.Entry(academic).State = EntityState.Modified;
+            updatedAcademic.Id = academic.Id;
+            updatedAcademic.Name = academic.Name;
+            await _context.SaveChangesAsync();
+            return new BaseRespone
+            {
+                Message = "Update success",
+                Data = academic
+            };
+        }
 
+        // POST: api/BaseRespones
+        [HttpPost]
+        public async Task<ActionResult<BaseRespone>> PostAcademic(Academic academic)
+        {
             try
             {
+                _context.Academics.Add(academic);
                 await _context.SaveChangesAsync();
+                return new BaseRespone
+                {
+                    Message = "Added success",
+                    Data = academic
+                };
             }
-            catch (DbUpdateConcurrencyException)
+            catch
             {
-                if (!AcademicExists(id))
+                return new BaseRespone
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                    ErrorCode = 1,
+                    Message = "Adding fail"
+                };
             }
-
-            return NoContent();
         }
 
-        // POST: api/Academics
-        [HttpPost]
-        public async Task<ActionResult<Academic>> PostAcademic(Academic academic)
-        {
-            _context.Academics.Add(academic);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetAcademic", new { id = academic.Id }, academic);
-        }
-
-        // DELETE: api/Academics/5
+        // DELETE: api/BaseRespones/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Academic>> DeleteAcademic(int id)
+        public async Task<ActionResult<BaseRespone>> DeleteAcademic(int id)
         {
             var academic = await _context.Academics.FindAsync(id);
             if (academic == null)
             {
-                return NotFound();
+                return new BaseRespone
+                {
+                    ErrorCode = 1,
+                    Message = "Delete fail"
+                };
             }
 
             _context.Academics.Remove(academic);
             await _context.SaveChangesAsync();
 
-            return academic;
+            return new BaseRespone
+            {
+                Message = "Delete success"
+            };
         }
 
         private bool AcademicExists(int id)

@@ -61,8 +61,8 @@ namespace ISC_System_API.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<BaseRespone>> PutLecturer(int id, Lecturer lecturer)
         {
-            var newLecturer = await _context.Lectures.FindAsync(id);
-            if (newLecturer == null)
+            var updatedLecturer = await _context.Lectures.FindAsync(id);
+            if (updatedLecturer == null)
             {
                 return new BaseRespone
                 {
@@ -71,8 +71,11 @@ namespace ISC_System_API.Controllers
                 };
             }
 
-            _context.Entry(lecturer).State = EntityState.Modified;
-
+            updatedLecturer.ACADEMICRANK = lecturer.ACADEMICRANK;
+            updatedLecturer.DEGREEID = lecturer.DEGREEID;
+            updatedLecturer.STARTDAY = lecturer.STARTDAY;
+            updatedLecturer.USERID = lecturer.USERID;
+            updatedLecturer.USE_USERID = lecturer.USE_USERID;
             await _context.SaveChangesAsync();
             return new BaseRespone
             {

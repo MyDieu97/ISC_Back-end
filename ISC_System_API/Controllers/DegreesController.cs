@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ISC_System_API;
 using ISC_System_API.Model;
+using ISC_System_API.Respone;
 
 namespace ISC_System_API.Controllers
 {
@@ -23,79 +24,106 @@ namespace ISC_System_API.Controllers
 
         // GET: api/Degrees
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Degree>>> GetDegrees()
+        public async Task<ActionResult<BaseRespone>> GetDegrees()
         {
-            return await _context.Degrees.ToListAsync();
+            return new BaseRespone
+            {
+                Message = "Get list success",
+                Data = await _context.Degrees.ToListAsync()
+            };
         }
 
         // GET: api/Degrees/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Degree>> GetDegree(int id)
+        public async Task<ActionResult<BaseRespone>> GetDegree(int id)
         {
             var degree = await _context.Degrees.FindAsync(id);
 
             if (degree == null)
             {
-                return NotFound();
+                return new BaseRespone
+                {
+                    ErrorCode = 1,
+                    Message = "Not Found"
+                };
             }
 
-            return degree;
+            return new BaseRespone
+            {
+                Message = "Get success",
+                Data = degree
+            };
         }
 
         // PUT: api/Degrees/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDegree(int id, Degree degree)
+        public async Task<BaseRespone> PutDegree(int id, Degree degree)
         {
-            if (id != degree.Id)
+            var updatedDegree = await _context.Degrees.FindAsync(id);
+            if (updatedDegree == null)
             {
-                return BadRequest();
-            }
-
-            _context.Entry(degree).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!DegreeExists(id))
+                return new BaseRespone
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                    ErrorCode = 1,
+                    Message = "Not Found"
+                };
             }
 
-            return NoContent();
+            updatedDegree.Id = degree.Id;
+            updatedDegree.Name = degree.Name;
+            await _context.SaveChangesAsync();
+            return new BaseRespone
+            {
+                Message = "Update success",
+                Data = degree
+            };
         }
 
         // POST: api/Degrees
         [HttpPost]
-        public async Task<ActionResult<Degree>> PostDegree(Degree degree)
+        public async Task<ActionResult<BaseRespone>> PostDegree(Degree degree)
         {
-            _context.Degrees.Add(degree);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetDegree", new { id = degree.Id }, degree);
+            try
+            {
+                _context.Degrees.Add(degree);
+                await _context.SaveChangesAsync();
+                return new BaseRespone
+                {
+                    Message = "Added success",
+                    Data = degree
+                };
+            }
+            catch
+            {
+                return new BaseRespone
+                {
+                    ErrorCode = 1,
+                    Message = "Adding fail"
+                };
+            }
         }
 
         // DELETE: api/Degrees/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Degree>> DeleteDegree(int id)
+        public async Task<ActionResult<BaseRespone>> DeleteDegree(int id)
         {
             var degree = await _context.Degrees.FindAsync(id);
             if (degree == null)
             {
-                return NotFound();
+                return new BaseRespone
+                {
+                    ErrorCode = 1,
+                    Message = "Delete fail"
+                };
             }
 
             _context.Degrees.Remove(degree);
             await _context.SaveChangesAsync();
 
-            return degree;
+            return new BaseRespone
+            {
+                Message = "Delete success"
+            };
         }
 
         private bool DegreeExists(int id)
