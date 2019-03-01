@@ -76,6 +76,7 @@ namespace ISC_System_API.Controllers
             updatedUser.LASTNAME = user.LASTNAME;
             updatedUser.PHONE = user.PHONE;
 
+            _context.Users.Update(user);
             await _context.SaveChangesAsync();
             return new BaseRespone
             {
