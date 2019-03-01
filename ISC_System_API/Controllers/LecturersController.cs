@@ -71,8 +71,11 @@ namespace ISC_System_API.Controllers
                 };
             }
 
-            _context.Entry(lecturer).State = EntityState.Modified;
-
+            newLecturer.USERID = lecturer.USERID;
+            newLecturer.STARTDAY = lecturer.STARTDAY;
+            newLecturer.DEGREEID = lecturer.DEGREEID;
+            newLecturer.ACADEMICRANK = lecturer.ACADEMICRANK;
+            _context.Lectures.Update(newLecturer);
             await _context.SaveChangesAsync();
             return new BaseRespone
             {

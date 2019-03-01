@@ -55,7 +55,7 @@ namespace ISC_System_API.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<BaseRespone>> PutUser(int id, User user)
         {
-            var newUser = await _context.Users.FindAsync(id);
+            var newUser = await _context.Users.FindAsync(user.Id);
             if (newUser == null)
             {
                 return new BaseRespone
@@ -65,7 +65,18 @@ namespace ISC_System_API.Controllers
                 };
             }
 
-            _context.Entry(user).State = EntityState.Modified;
+            newUser.Id = user.Id;
+            newUser.ADDRESS = user.ADDRESS;
+            newUser.DOB = user.DOB;
+            newUser.EMAIL = user.EMAIL;
+            newUser.FIRSTNAME = user.FIRSTNAME;
+            newUser.GENDER = user.GENDER;
+            newUser.IDENTITYNUMBER = user.IDENTITYNUMBER;
+            newUser.LASTNAME = user.LASTNAME;
+            newUser.PHONE = user.PHONE;
+            newUser.IsStudent = user.IsStudent;
+
+            _context.Users.Update(newUser);
             await _context.SaveChangesAsync();
             return new BaseRespone
             {
