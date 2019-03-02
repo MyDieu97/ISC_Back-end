@@ -8,20 +8,24 @@ using System.Threading.Tasks;
 namespace ISC_System_API.Model
 {
     [Table("LECTURES")]
-    public class Lecture
+    public class Lecturer
     {
         [Required]
         [Key]
         public int USERID { get; set; }
         [Required]
         public Nullable<int> USE_USERID { get; set; }
-        public Nullable<int> DEGREE { get; set; }
+        [Column("DEGREE")]
+        public Nullable<int> DEGREEID { get; set; }
         public Nullable<int> ACADEMICRANK { get; set; }
         [DataType(DataType.Date)]
         public Nullable<System.DateTime> STARTDAY { get; set; }
         public virtual ICollection<LecturerClasses> LECTURER_CLASSES { get; set; }
+        [ForeignKey("USE_USERID")]
         public virtual User USER { get; set; }
-        public virtual Degree DEGREEs { get; set; }
-        public virtual Academic ACADEMICs { get; set; }
+        [ForeignKey("DEGREEID")]
+        public virtual Degree DEGREE { get; set; }
+        [ForeignKey("ACADEMICRANK")]
+        public virtual Academic ACADEMIC { get; set; }
     }
 }

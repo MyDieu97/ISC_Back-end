@@ -20,6 +20,6 @@ namespace ISC_System_API.Model
 
         public virtual Class CLASS { get; set; }
         public virtual ICollection<DetailTimetable> DETAILSTIMETABLEs { get; set; }
-        public virtual Lecture LECTURE { get; set; }
+        public virtual Lecturer LECTURE { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,6 +15,7 @@ namespace ISC_System_API.Model
         public int Id { get; set; }
         [Column("DegreeName")]
         public string Name { get; set; }
-        public virtual ICollection<Lecture> Lectures { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<Lecturer> Lectures { get; set; }
     }
 }
