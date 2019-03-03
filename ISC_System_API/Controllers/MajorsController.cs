@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ISC_System_API;
 using ISC_System_API.Model;
+using ISC_System_API.Respone;
 
 namespace ISC_System_API.Controllers
 {
@@ -23,79 +24,106 @@ namespace ISC_System_API.Controllers
 
         // GET: api/Majors
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Major>>> GetMajors()
+        public async Task<ActionResult<BaseRespone>> GetMajors()
         {
-            return await _context.Majors.ToListAsync();
+            return new BaseRespone
+            {
+                Message = "Get list success",
+                Data = await _context.Majors.ToListAsync()
+            };
         }
 
         // GET: api/Majors/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Major>> GetMajor(int id)
+        public async Task<ActionResult<BaseRespone>> GetMajor(int id)
         {
             var major = await _context.Majors.FindAsync(id);
 
             if (major == null)
             {
-                return NotFound();
+                return new BaseRespone
+                {
+                    ErrorCode = 1,
+                    Message = "Not Found"
+                };
             }
 
-            return major;
+            return new BaseRespone
+            {
+                Message = "Get success",
+                Data = major
+            };
         }
 
         // PUT: api/Majors/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMajor(int id, Major major)
+        public async Task<BaseRespone> PutMajor(int id, Major major)
         {
-            if (id != major.Id)
+            var updatedAcademic = await _context.Majors.FindAsync(id);
+            if (updatedAcademic == null)
             {
-                return BadRequest();
-            }
-
-            _context.Entry(major).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MajorExists(id))
+                return new BaseRespone
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                    ErrorCode = 1,
+                    Message = "Not Found"
+                };
             }
 
-            return NoContent();
+            updatedAcademic.Id = major.Id;
+            updatedAcademic.Name = major.Name;
+            await _context.SaveChangesAsync();
+            return new BaseRespone
+            {
+                Message = "Update success",
+                Data = major
+            };
         }
 
         // POST: api/Majors
         [HttpPost]
-        public async Task<ActionResult<Major>> PostMajor(Major major)
+        public async Task<ActionResult<BaseRespone>> PostMajor(Major major)
         {
-            _context.Majors.Add(major);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetMajor", new { id = major.Id }, major);
+            try
+            {
+                _context.Majors.Add(major);
+                await _context.SaveChangesAsync();
+                return new BaseRespone
+                {
+                    Message = "Added success",
+                    Data = major
+                };
+            }
+            catch
+            {
+                return new BaseRespone
+                {
+                    ErrorCode = 1,
+                    Message = "Adding fail"
+                };
+            }
         }
 
         // DELETE: api/Majors/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Major>> DeleteMajor(int id)
+        public async Task<ActionResult<BaseRespone>> DeleteMajor(int id)
         {
             var major = await _context.Majors.FindAsync(id);
             if (major == null)
             {
-                return NotFound();
+                return new BaseRespone
+                {
+                    ErrorCode = 1,
+                    Message = "Delete fail"
+                };
             }
 
             _context.Majors.Remove(major);
             await _context.SaveChangesAsync();
 
-            return major;
+            return new BaseRespone
+            {
+                Message = "Delete success"
+            };
         }
 
         private bool MajorExists(int id)

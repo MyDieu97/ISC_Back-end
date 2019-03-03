@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ISC_System_API;
 using ISC_System_API.Model;
+using ISC_System_API.Respone;
 
 namespace ISC_System_API.Controllers
 {
@@ -23,79 +24,106 @@ namespace ISC_System_API.Controllers
 
         // GET: api/Universities
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<University>>> GetUniversitys()
+        public async Task<ActionResult<BaseRespone>> GetUniversitys()
         {
-            return await _context.Universitys.ToListAsync();
+            return new BaseRespone
+            {
+                Message = "Get list success",
+                Data = await _context.Universitys.ToListAsync()
+            };
         }
 
         // GET: api/Universities/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<University>> GetUniversity(int id)
+        public async Task<ActionResult<BaseRespone>> GetUniversity(int id)
         {
             var university = await _context.Universitys.FindAsync(id);
 
             if (university == null)
             {
-                return NotFound();
+                return new BaseRespone
+                {
+                    ErrorCode = 1,
+                    Message = "Not Found"
+                };
             }
 
-            return university;
+            return new BaseRespone
+            {
+                Message = "Get success",
+                Data = university
+            };
         }
 
         // PUT: api/Universities/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUniversity(int id, University university)
+        public async Task<BaseRespone> PutUniversity(int id, University university)
         {
-            if (id != university.Id)
+            var updatedUniversity = await _context.Universitys.FindAsync(id);
+            if (updatedUniversity == null)
             {
-                return BadRequest();
-            }
-
-            _context.Entry(university).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UniversityExists(id))
+                return new BaseRespone
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                    ErrorCode = 1,
+                    Message = "Not Found"
+                };
             }
 
-            return NoContent();
+            updatedUniversity.Id = university.Id;
+            updatedUniversity.Name = university.Name;
+            await _context.SaveChangesAsync();
+            return new BaseRespone
+            {
+                Message = "Update success",
+                Data = university
+            };
         }
 
         // POST: api/Universities
         [HttpPost]
-        public async Task<ActionResult<University>> PostUniversity(University university)
+        public async Task<ActionResult<BaseRespone>> PostUniversity(University university)
         {
-            _context.Universitys.Add(university);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetUniversity", new { id = university.Id }, university);
+            try
+            {
+                _context.Universitys.Add(university);
+                await _context.SaveChangesAsync();
+                return new BaseRespone
+                {
+                    Message = "Added success",
+                    Data = university
+                };
+            }
+            catch
+            {
+                return new BaseRespone
+                {
+                    ErrorCode = 1,
+                    Message = "Adding fail"
+                };
+            }
         }
 
         // DELETE: api/Universities/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<University>> DeleteUniversity(int id)
+        public async Task<ActionResult<BaseRespone>> DeleteUniversity(int id)
         {
             var university = await _context.Universitys.FindAsync(id);
             if (university == null)
             {
-                return NotFound();
+                return new BaseRespone
+                {
+                    ErrorCode = 1,
+                    Message = "Delete fail"
+                };
             }
 
             _context.Universitys.Remove(university);
             await _context.SaveChangesAsync();
 
-            return university;
+            return new BaseRespone
+            {
+                Message = "Delete success"
+            };
         }
 
         private bool UniversityExists(int id)
