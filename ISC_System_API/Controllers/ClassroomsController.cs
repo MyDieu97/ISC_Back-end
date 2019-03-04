@@ -16,22 +16,42 @@ namespace ISC_System_API.Controllers
     public class ClassroomsController : ControllerBase
     {
         private readonly Context _context;
+
+
         public ClassroomsController(Context context)
         {
             _context = context;
         }
         // GET: api/<controller>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ClassRoom>>> Get()
+        public async Task<ActionResult<BaseRespone>> Get()
         {
-            return await _context.ClassRooms.ToListAsync();
-        }
+            var classroom = await _context.ClassRooms.AsNoTracking().
+                            Select(x => new ClassRoomInfo
+                            {
+                                Id = x.Id,
+                                CAPACITY = x.CAPACITY,
+                                DATEADDED = x.DATEADDED,
+                                Name = x.Name,
+                                ADDEDPERSON = x.ADDEDPERSON
+                            }).ToListAsync();
 
+            return new BaseRespone(classroom);
+        }
+        [HttpGet("user")]
+        public async Task<ActionResult<BaseRespone>> GetUsers(int id)
+        {
+            var FirstName = await _context.Users.Where(x => x.Id == id).Select(p => new { p.FIRSTNAME, p.LASTNAME }).ToListAsync();
+            return new BaseRespone(FirstName);
+            //string LastName = _context.Users.Where(x => x.Id == 1).Select(p => new {p.LASTNAME }).ToString();
+            //return FirstName + LastName;
+        }
         // GET api/<controller>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ClassRoom>> Get(int id)
+        public async Task<ActionResult<BaseRespone>> Get(int id)
         {
-            return await _context.ClassRooms.FindAsync(id);
+            var classroom = await _context.ClassRooms.FindAsync(id);
+            return new BaseRespone(classroom);
         }
 
         // POST api/<controller>
