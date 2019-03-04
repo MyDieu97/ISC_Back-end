@@ -35,5 +35,6 @@ namespace ISC_System_API
         public virtual DbSet<University> Universitys { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Worktrack> Worktracks { get; set; }
+        public virtual DbSet<EntranceTest> EntranceTests { get; set; }
     }
 }
