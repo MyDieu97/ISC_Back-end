@@ -29,7 +29,7 @@ namespace ISC_System_API.Model
         [ForeignKey("USE_USERID")]
         public virtual User USER { get; set; }
 
-        [ForeignKey("DEGREE")] 
+        [ForeignKey("Id")] 
         public virtual Degree DEGREEs { get; set; }
 
         [ForeignKey("ACADEMICRANK")] 
