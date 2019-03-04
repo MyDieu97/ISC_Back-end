@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ISC_System_API;
-using ISC_System_API.Model.Respone;
 using ISC_System_API.Model;
 using Microsoft.AspNetCore.Authorization;
+using ISC_System_API.Respone;
 
 namespace ISC_System_API.Controllers
 {
