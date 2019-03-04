@@ -16,7 +16,7 @@ namespace ISC_System_API
         public virtual DbSet<Academic> Academics { get; set; }
         public virtual DbSet<Class> Class { get; set; }
         public virtual DbSet<ClassRoom> ClassRooms { get; set; }
-        public virtual DbSet<Company> Companys { get; set; }
+        public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<Course> Courses { get; set; }
         public virtual DbSet<Degree> Degrees { get; set; }
         public virtual DbSet<DetailTimetable> DetailTimetables { get; set; }

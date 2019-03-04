@@ -11,6 +11,7 @@ namespace ISC_System_API.Model
     public class Worktrack
     {
         [Key]
+        public int ID { get; set; }
         public int COMPANYID { get; set; }
         public Nullable<int> IDSTUDENT { get; set; }
         [DataType(DataType.Date)]
