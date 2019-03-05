@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ISC_System_API.Respone
+namespace ISC_System_API.Model
 {
-    public class LoginResponse
+    [Table("ADMIN")]
+    public class ADMIN
     {
         [Key]
         public int AdminId { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-        public string Token { get; set; }
+        public string Fullname { get; set; }
     }
 }

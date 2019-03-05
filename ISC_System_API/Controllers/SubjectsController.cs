@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IscSystemManagament.Models;
-using IscSystemManagament.Respone;
+using ISC_System_API.Model;
+using ISC_System_API.Respone;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace IscSystemManagament.Controllers
+namespace ISC_System_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -87,7 +87,7 @@ namespace IscSystemManagament.Controllers
             }
 
             _subject.SubjectId = subject.SubjectId;
-            _subject.Name = subject.Name;
+            _subject.Subjectname = subject.Subjectname;
             _subject.NUMBERLESSON = subject.NUMBERLESSON;
 
             _db.Subjects.Update(_subject);

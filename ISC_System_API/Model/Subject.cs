@@ -14,7 +14,7 @@ namespace ISC_System_API.Model
         [Column("SUBJECTID")]
         public int SubjectId { get; set; }
         [Column("SUBJECTNAME")]
-        public string Name { get; set; }
+        public string Subjectname { get; set; }
         [Required]
         [Range(1,100)]
         public Nullable<short> NUMBERLESSON { get; set; }

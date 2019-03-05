@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IscSystemManagament.Models;
-using IscSystemManagament.Respone;
+using ISC_System_API.Model;
+using ISC_System_API.Respone;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace IscSystemManagament.Controllers
+namespace ISC_System_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -66,7 +66,7 @@ namespace IscSystemManagament.Controllers
             await _db.SaveChangesAsync();
 
             CreatedAtAction("Get", new { id = company.Id }, company);
-            return new BaseResponse
+            return new BaseRespone
             {
                 Message = "Postted"
             };
