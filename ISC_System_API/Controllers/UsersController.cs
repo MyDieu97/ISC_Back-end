@@ -24,9 +24,12 @@ namespace ISC_System_API.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<BaseRespone>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            return new BaseRespone
+            {
+                Data = await _context.Users.ToListAsync(),
+            };       
         }
 
         // GET: api/Users/5
@@ -76,7 +79,7 @@ namespace ISC_System_API.Controllers
             updatedUser.LASTNAME = user.LASTNAME;
             updatedUser.PHONE = user.PHONE;
 
-            _context.Users.Update(user);
+            _context.Users.Update(updatedUser);
             await _context.SaveChangesAsync();
             return new BaseRespone
             {
