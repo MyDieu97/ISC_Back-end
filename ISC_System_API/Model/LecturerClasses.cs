@@ -17,9 +17,10 @@ namespace ISC_System_API.Model
         public Nullable<int> CLASSID { get; set; }
         [Required]
         public Nullable<int> USERID { get; set; }
-
+        [ForeignKey("CLASSID")]
         public virtual Class CLASS { get; set; }
         public virtual ICollection<DetailTimetable> DETAILSTIMETABLEs { get; set; }
+        [ForeignKey("USERID")]
         public virtual Lecturer LECTURE { get; set; }
     }
 }

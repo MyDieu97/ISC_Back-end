@@ -23,7 +23,13 @@ namespace ISC_System_API.Controllers
         [HttpGet]
         public async Task<ActionResult<BaseRespone>> Get()
         {
-            var data = await _context.EntranceTests.ToListAsync();
+            var data = await _context.EntranceTests.Include(p => p.COURSES).AsNoTracking()
+                .Select(x => new EntranceRespone {
+                    COURSEID = x.COURSEID,
+                    Id = x.Id,
+                    TESTDATE = x.TESTDATE,
+                    CoureName = x.COURSES.Name
+                }).ToListAsync();
             return new BaseRespone(data);
         }
 

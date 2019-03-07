@@ -26,18 +26,22 @@ namespace ISC_System_API.Controllers
         [HttpGet]
         public async Task<ActionResult<BaseRespone>> Get()
         {
-            var classroom = await _context.ClassRooms.AsNoTracking().
-                            Select(x => new ClassRoomInfo
-                            {
-                                Id = x.Id,
-                                CAPACITY = x.CAPACITY,
-                                DATEADDED = x.DATEADDED,
-                                Name = x.Name,
-                                ADDEDPERSON = x.ADDEDPERSON
-                            }).ToListAsync();
+            var classroom = await (from cl in _context.ClassRooms
+                             join us in _context.Users on cl.ADDEDPERSON equals us.Id
+                             select new ClassRoomInfo
+                             {
+                                 ADDEDPERSON = cl.ADDEDPERSON,
+                                 CAPACITY = cl.CAPACITY,
+                                 DATEADDED = cl.DATEADDED,
+                                 Id = cl.Id,
+                                 Name = cl.Name,
+                                 Person = us.FIRSTNAME + us.LASTNAME
+                             }).ToListAsync();
 
             return new BaseRespone(classroom);
         }
+
+
         [HttpGet("user")]
         public async Task<ActionResult<BaseRespone>> GetUsers(int id)
         {

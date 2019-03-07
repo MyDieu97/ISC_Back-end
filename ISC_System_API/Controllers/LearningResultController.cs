@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ISC_System_API.Request;
 using ISC_System_API.Respone;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,28 +23,31 @@ namespace ISC_System_API.Controllers
         }
         // GET: api/<controller>
         [HttpGet]
-        public async Task<ActionResult<BaseRespone>> Get()
+        public async Task<ActionResult<BaseRespone>> Get([FromQuery] LearningRequest req)
         {
-            var learnignInfo = await _context.LearningResults.Include(p => p.CLASS).Include(p => p.STUDENT).AsNoTracking()
+            var learnignInfo = await _context.LearningResults.Include(p => p.CLASS).Include(p => p.STUDENT)
+                        .Include(p=>p.STUDENT.USER).AsNoTracking()
+                        .Where(p=>p.CLASSID == req.ClassId && p.CLASS.COURSEID == req.CourseId)
                         .Select(x => new LearningResultInfo
                         {
                             ClassId = x.CLASS.Id,
                             AVGSCORE = x.AVGSCORE,
                             ClassName = x.CLASS.Name,
                             Id = x.ID,
-                            StudenId = x.STUDENT.Id,
+                            StudenId = x.IDSTUDENT,
                             FirstName = x.STUDENT.USER.FIRSTNAME,
                             LastName = x.STUDENT.USER.LASTNAME
                         }).ToListAsync();
+            if(learnignInfo.Count == 0)
+            {
+                return new BaseRespone
+                {
+                    ErrorCode = 1,
+                    Message = "NotFound"
+                };
+            }
             return new BaseRespone(learnignInfo);
         }
-
-        //private string GetNameStudent(int id)
-        //{
-        //    var studentInfo = _context.Users.Find(id);
-        //    return studentInfo.FIRSTNAME + studentInfo.LASTNAME;
-        //}
-        // GET api/<controller>/5
         [HttpGet("{id}")]
         public string Get(int id)
         {

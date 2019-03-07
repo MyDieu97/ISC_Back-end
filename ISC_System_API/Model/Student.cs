@@ -26,6 +26,7 @@ namespace ISC_System_API.Model
         public virtual ICollection<LearningResult> LEARNINGRESULTS { get; set; }
         public virtual Major MAJOR { get; set; }
         public virtual University UNIVERSITY { get; set; }
+        [ForeignKey("USERID")]
         public virtual User USER { get; set; }
         public virtual ICollection<Worktrack> WORKTRACKS { get; set; }
     }
