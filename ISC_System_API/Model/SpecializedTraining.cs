@@ -16,7 +16,9 @@ namespace ISC_System_API.Model
         [Column("TRAININGNAME")]
         [StringLength(200)]
         public string Name { get; set; }
+
+        [Column("NUMBERWEEK")]
         [Range(1,99)]
-        public Nullable<short> NUMBERWEEK { get; set; }       
+        public Nullable<short> NumberofWeeks { get; set; }       
     }
 }

@@ -38,5 +38,9 @@ namespace ISC_System_API
         public virtual DbSet<EntranceTest> EntranceTests { get; set; }
 
         public virtual DbSet<ADMIN> Admins { get; set; }
+
+        public DbSet<ISC_System_API.Model.CourseTraining> CourseTraining { get; set; }
+
+        public DbSet<ISC_System_API.Model.TrainingSubject> TrainingSubject { get; set; }
     }
 }
