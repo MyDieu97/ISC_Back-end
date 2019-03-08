@@ -128,7 +128,7 @@ namespace ISC_System_API.Controllers
         }
 
         // DELETE: api/TrainingSubjects/5
-        [HttpDelete("{trainingId}")]
+        [HttpDelete("DeleteAllByTrainingId/{trainingId}")]
         public async Task<ActionResult<BaseRespone>> DeleteAllByTrainingId(int trainingId)
         {
             List<TrainingSubject> list = await _context.TrainingSubject
@@ -154,13 +154,11 @@ namespace ISC_System_API.Controllers
             };
         }
 
-        [HttpDelete]
-        public async Task<ActionResult<TrainingSubject>> DeleteTrainingSubject(TrainingSubject item)
+        //[Route("DeleteTrainingSubject")]
+        [HttpDelete("DeleteTrainingSubject/{id}")]
+        public async Task<ActionResult<TrainingSubject>> DeleteTrainingSubject(int id)
         {
-            var trainingSubject =  _context.TrainingSubject
-                .Where(x => x.TrainingId == item.TrainingId)
-                .Where(x => x.SubjectId == item.SubjectId)
-                .FirstOrDefault();
+            var trainingSubject = await _context.TrainingSubject.FindAsync(id);
             if (trainingSubject == null)
             {
                 return NotFound();
