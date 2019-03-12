@@ -17,7 +17,7 @@ namespace ISC_System_API.Model
         public Nullable<int> UniverId { get; set; }
         public Nullable<int> MAJORID { get; set; }
         public Nullable<int> IDUSER { get; set; }
-        public Nullable<int> USERID { get; set; }
+        public int USERID { get; set; }
         public Nullable<byte> CERTIFICATION { get; set; }
         [DataType(DataType.Date)]
         public Nullable<System.DateTime> READYWORKDATE { get; set; }
