@@ -156,7 +156,7 @@ namespace ISC_System_API.Controllers
 
         //[Route("DeleteTrainingSubject")]
         [HttpDelete("DeleteTrainingSubject/{id}")]
-        public async Task<ActionResult<TrainingSubject>> DeleteTrainingSubject(int id)
+        public async Task<ActionResult<BaseRespone>> DeleteTrainingSubject(int id)
         {
             var trainingSubject = await _context.TrainingSubject.FindAsync(id);
             if (trainingSubject == null)
@@ -167,7 +167,11 @@ namespace ISC_System_API.Controllers
             _context.TrainingSubject.Remove(trainingSubject);
             await _context.SaveChangesAsync();
 
-            return trainingSubject;
+            return new BaseRespone {
+                ErrorCode = 0,
+                Message = "Object Deleted!",
+                Data = trainingSubject
+            };
         }
 
         private bool TrainingSubjectExists(int id)
