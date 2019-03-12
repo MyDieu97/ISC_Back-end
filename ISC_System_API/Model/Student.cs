@@ -44,7 +44,7 @@ namespace ISC_System_API.Model
         public virtual ICollection<Worktrack> WORKTRACKS { get; set; }
     }
 
-    class StudentInfo
+    public class StudentInfo
     {
         public int Id { get; set; }
 

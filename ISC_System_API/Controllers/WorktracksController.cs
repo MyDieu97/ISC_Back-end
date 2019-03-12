@@ -25,21 +25,24 @@ namespace ISC_System_API.Controllers
         public async Task<ActionResult<BaseRespone>> GetAll()
         {
             var list = await _db.Worktracks
-                .Include(x => x.COMPANY.Id == x.COMPANYID)
-                .Include(x => x.STUDENT.Id == x.IDSTUDENT)
-                .Include(x => x.STUDENT.USER.Id == x.STUDENT.USERID)
+                .Include(x => x.COMPANY)
+                .Include(x => x.STUDENT)
                 .Select(x => new WorktrackInfo
                 {
                     Id = x.ID,
-                    CompanyId = x.COMPANYID,
-                    StudentId = x.IDSTUDENT,
-                    CompanyName = x.COMPANY.Name,
-                    StudentName = x.STUDENT.USER.LASTNAME + " " + x.STUDENT.USER.FIRSTNAME,
+                    Company = x.COMPANY,
+                    Student = x.STUDENT,
                     StartDate = x.STARTDATE,
                     ContractDate = x.CONTRACTDATE,
                     Note = x.NOTE
                 })
                 .ToListAsync();
+
+            foreach (WorktrackInfo item in list)
+            {
+                item.User = await _db.Users.FindAsync(item.Student.USERID);
+            }
+
             return new BaseRespone {
                 ErrorCode = 0,
                 Data = list
@@ -101,7 +104,6 @@ namespace ISC_System_API.Controllers
                 };
             }
 
-            check.ID = worktrack.ID;
             check.COMPANYID = worktrack.COMPANYID;
             check.IDSTUDENT = worktrack.IDSTUDENT;
             check.STARTDATE = worktrack.STARTDATE;

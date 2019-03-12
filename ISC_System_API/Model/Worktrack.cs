@@ -11,6 +11,7 @@ namespace ISC_System_API.Model
     public class Worktrack
     {
         [Key]
+        [Column("WORKTRACKID")]
         public int ID { get; set; }
         public int COMPANYID { get; set; }
         public int IDSTUDENT { get; set; }
@@ -18,7 +19,7 @@ namespace ISC_System_API.Model
         public Nullable<System.DateTime> STARTDATE { get; set; }
         [DataType(DataType.Date)]
         public Nullable<System.DateTime> CONTRACTDATE { get; set; }
-        public Nullable<byte> STATUS { get; set; }
+        public byte STATUS { get; set; }
         public string NOTE { get; set; }
 
         [ForeignKey("COMPANYID")]
