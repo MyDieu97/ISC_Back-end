@@ -27,7 +27,7 @@ namespace ISC_System_API
         public virtual DbSet<LecturerClasses> LecturerClasses { get; set; }
         public virtual DbSet<Major> Majors { get; set; }
         public virtual DbSet<SpecializedTraining> SpecializedTrainings { get; set; }
-        public virtual DbSet<Student> Student { get; set; }
+        public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<SubjectEntranceTest> SubjectEntranceTests { get; set; }
         public virtual DbSet<TestResult> TestResults { get; set; }
