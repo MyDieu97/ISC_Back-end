@@ -12,6 +12,7 @@ namespace ISC_System_API.Model
     public class Course
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("COURSEID")]
         public int CourseId { get; set; }
         [Column("COURSENAME")]
