@@ -133,7 +133,7 @@ namespace ISC_System_API.Controllers
         [HttpGet]
         public async Task<ActionResult<BaseRespone>> GetTheLast()
         {
-            var item =  _context.SpecializedTrainings.Last();
+            var item = await _context.SpecializedTrainings.LastAsync();
 
             return new BaseRespone {
                 ErrorCode = 0,

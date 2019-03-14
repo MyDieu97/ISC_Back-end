@@ -88,9 +88,9 @@ namespace ISC_System_API.Controllers
             }
 
             com.Id = company.Id;
-            com.Name = company.Name;
+            com.NAME = company.NAME;
             com.DIACHI = company.DIACHI;
-            com.CONTECTPERSON = company.CONTECTPERSON;
+            com.CONTACTPERSON = company.CONTACTPERSON;
             com.PHONE = company.PHONE;
             com.STATUS = company.STATUS;
 

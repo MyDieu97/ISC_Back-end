@@ -22,9 +22,31 @@ namespace ISC_System_API.Controllers
         }
         // GET: api/<controller>
         [HttpGet]
-        public async Task<ActionResult<BaseRespone>> Get()
+        public async Task<ActionResult<BaseRespone>> GetAll()
         {
-            return new BaseRespone(await _db.Worktracks.ToListAsync());
+            var list = await _db.Worktracks
+                .Include(x => x.COMPANY)
+                .Include(x => x.STUDENT)
+                .Select(x => new WorktrackInfo
+                {
+                    Id = x.ID,
+                    Company = x.COMPANY,
+                    Student = x.STUDENT,
+                    StartDate = x.STARTDATE,
+                    ContractDate = x.CONTRACTDATE,
+                    Note = x.NOTE
+                })
+                .ToListAsync();
+
+            foreach (WorktrackInfo item in list)
+            {
+                item.User = await _db.Users.FindAsync(item.Student.USERID);
+            }
+
+            return new BaseRespone {
+                ErrorCode = 0,
+                Data = list
+            };
         }
 
         // GET api/<controller>/5
@@ -38,7 +60,7 @@ namespace ISC_System_API.Controllers
                 return new BaseRespone
                 {
                     ErrorCode = 1,
-                    Message = "Error get id. This worktrack is not exists!"
+                    Message = "Error!! This worktrack is not exists!"
                 };
             }
 
@@ -63,7 +85,7 @@ namespace ISC_System_API.Controllers
             await _db.SaveChangesAsync();
 
             CreatedAtAction("Get", new { id = worktrack.ID }, worktrack);
-            return new BaseRespone { Message = "Post is successful!" };
+            return new BaseRespone { Message = "Create successful!" };
 
         }
 
@@ -78,11 +100,10 @@ namespace ISC_System_API.Controllers
                 return new BaseRespone
                 {
                     ErrorCode = 1,
-                    Message = "Error put. This worktrack"
+                    Message = "Error!! This worktrack is not exist."
                 };
             }
 
-            check.ID = worktrack.ID;
             check.COMPANYID = worktrack.COMPANYID;
             check.IDSTUDENT = worktrack.IDSTUDENT;
             check.STARTDATE = worktrack.STARTDATE;
@@ -95,7 +116,7 @@ namespace ISC_System_API.Controllers
 
             return new BaseRespone
             {
-                Message = "Put is successful!"
+                Message = "Update successfully!"
             };
         }
 
@@ -116,7 +137,7 @@ namespace ISC_System_API.Controllers
             await _db.SaveChangesAsync();
             return new BaseRespone
             {
-                Message = "Delete is successfully",
+                Message = "Delete successfully",
                 Data = _worktrack
             };
         }
