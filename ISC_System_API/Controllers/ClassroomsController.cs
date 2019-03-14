@@ -27,16 +27,16 @@ namespace ISC_System_API.Controllers
         public async Task<ActionResult<BaseRespone>> Get()
         {
             var classroom = await (from cl in _context.ClassRooms
-                             join us in _context.Users on cl.ADDEDPERSON equals us.Id
-                             select new ClassRoomInfo
-                             {
-                                 ADDEDPERSON = cl.ADDEDPERSON,
-                                 CAPACITY = cl.CAPACITY,
-                                 DATEADDED = cl.DATEADDED,
-                                 Id = cl.Id,
-                                 Name = cl.Name,
-                                 Person = us.FIRSTNAME + us.LASTNAME
-                             }).ToListAsync();
+                                   join us in _context.Users on cl.ADDEDPERSON equals us.Id
+                                   select new ClassRoomInfo
+                                   {
+                                       ADDEDPERSON = cl.ADDEDPERSON,
+                                       CAPACITY = cl.CAPACITY,
+                                       DATEADDED = cl.DATEADDED,
+                                       Id = cl.Id,
+                                       Name = cl.Name,
+                                       Person = us.FIRSTNAME + us.LASTNAME
+                                   }).ToListAsync();
 
             return new BaseRespone(classroom);
         }
@@ -62,23 +62,36 @@ namespace ISC_System_API.Controllers
         [HttpPost]
         public async Task<ActionResult<BaseRespone>> Post(ClassRoom classroom)
         {
-            try
+            if (ExistClassroom(classroom)==false)
             {
-                _context.ClassRooms.Add(classroom);
-                await _context.SaveChangesAsync();
-                return new BaseRespone
+                try
                 {
-                    Message = "Added success"
-                };
+                    _context.ClassRooms.Add(classroom);
+                    await _context.SaveChangesAsync();
+                    return new BaseRespone
+                    {
+                        ErrorCode = 0,
+                        Message = "Added success"
+                    };
+                }
+                catch
+                {
+                    return new BaseRespone
+                    {
+                        ErrorCode = 1,
+                        Message = "Adding fail"
+                    };
+                }
             }
-            catch
+            else
             {
                 return new BaseRespone
                 {
                     ErrorCode = 1,
-                    Message = "Adding fail"
+                    Message = "Classroom has been ready!"
                 };
             }
+            
         }
 
         // PUT api/<controller>/5
@@ -94,17 +107,29 @@ namespace ISC_System_API.Controllers
                     Message = "Not Found"
                 };
             }
-            newclr.Id = clr.Id;
-            newclr.Name = clr.Name;
-            newclr.ADDEDPERSON = clr.ADDEDPERSON;
-            newclr.DATEADDED = clr.DATEADDED;
-            newclr.CAPACITY = clr.CAPACITY;
-            _context.ClassRooms.Update(newclr);
-            await _context.SaveChangesAsync();
-            return new BaseRespone
+            if (ExistClassroom(clr))
             {
-                Message = "Update success"
-            };
+                return new BaseRespone
+                {
+                    ErrorCode = 1,
+                    Message = "Classroom has been ready!"
+                };
+            }
+            else
+            {
+                newclr.Id = clr.Id;
+                newclr.Name = clr.Name.Trim();
+                newclr.ADDEDPERSON = clr.ADDEDPERSON;
+                newclr.DATEADDED = clr.DATEADDED;
+                newclr.CAPACITY = clr.CAPACITY;
+                _context.ClassRooms.Update(newclr);
+                await _context.SaveChangesAsync();
+                return new BaseRespone
+                {
+                    ErrorCode = 0,
+                    Message = "Update success"
+                };
+            }
         }
 
         // DELETE api/<controller>/5
@@ -128,5 +153,16 @@ namespace ISC_System_API.Controllers
                 Message = "Delete fail"
             };
         }
+
+        private Boolean ExistClassroom(ClassRoom clr)
+        {
+            var result = _context.ClassRooms.Where(x => x.Name.Equals(clr.Name.Trim())).ToList();
+            if (result.Count == 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
     }
 }

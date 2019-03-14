@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ISC_System_API.Controllers
 {
-    [Route("api/LearResult")]
+    [Route("api/LearnResult")]
     [ApiController]
     public class LearningResultController : Controller
     {

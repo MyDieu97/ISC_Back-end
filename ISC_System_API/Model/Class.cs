@@ -14,9 +14,9 @@ namespace ISC_System_API.Model
         [Column("CLASSID")]
         public int Id { get; set; }
         [Required]
-        public Nullable<int> COURSEID { get; set; }
+        public int COURSEID { get; set; }
         [Required]
-        public Nullable<int> SUBJECTID { get; set; }
+        public int SUBJECTID { get; set; }
         [Column("CLASSNAME")]
         [StringLength(200)]
         public string Name { get; set; }

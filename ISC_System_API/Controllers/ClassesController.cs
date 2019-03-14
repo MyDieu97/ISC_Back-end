@@ -35,7 +35,7 @@ namespace ISC_System_API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<BaseRespone>> Get(int id)
         {
-            var classes = await _context.Class.Where(p => p.Id == id).ToListAsync();
+            var classes = await _context.Class.FindAsync(id);
             return new BaseRespone(classes);
         }
 
@@ -50,29 +50,74 @@ namespace ISC_System_API.Controllers
         [HttpPost]
         public async Task<ActionResult<BaseRespone>> Post(Class classes)
         {
-            try
+            if(ExistCourseAndSubject(classes) == false)
             {
-                _context.Class.Add(classes);
-                await _context.SaveChangesAsync();
-                return new BaseRespone
+                try
                 {
-                    Message = "Added success"
-                };
+                    _context.Class.Add(classes);
+                    await _context.SaveChangesAsync();
+                    return new BaseRespone
+                    {
+                        ErrorCode = 0,
+                        Message = "Added success"
+                    };
+                }
+                catch
+                {
+                    return new BaseRespone
+                    {
+                        ErrorCode = 1,
+                        Message = "Adding fail"
+                    };
+                }
             }
-            catch
+            else
             {
                 return new BaseRespone
                 {
                     ErrorCode = 1,
-                    Message = "Adding fail"
+                    Message = "Course and Subject has been ready!"
                 };
             }
+            
         }
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public async Task<ActionResult<BaseRespone>> Put(int id, Class cls)
         {
+            var newclass = await _context.Class.FindAsync(id);
+            if (newclass == null)
+            {
+                return new BaseRespone
+                {
+                    ErrorCode = 1,
+                    Message = "Not Found"
+                };
+            }
+            if (ExistCourseAndSubject(cls))
+            {
+                return new BaseRespone
+                {
+                    ErrorCode = 1,
+                    Message = "Course and Subject has been ready!"
+                };
+            }
+            else
+            {
+                newclass.Id = cls.Id;
+                newclass.COURSEID = cls.COURSEID;
+                newclass.SUBJECTID = cls.SUBJECTID;
+                newclass.PASSINGSCORE = cls.PASSINGSCORE;
+                newclass.PercentBan = cls.PercentBan;
+                newclass.Name = cls.Name;
+                await _context.SaveChangesAsync();
+                return new BaseRespone
+                {
+                    ErrorCode = 0,
+                    Message = "Update success"
+                };
+            }
         }
 
         // DELETE api/<controller>/5
@@ -96,6 +141,15 @@ namespace ISC_System_API.Controllers
                 ErrorCode = 1,
                 Message = "Delete fail"
             };
+        }
+
+        private Boolean ExistCourseAndSubject(Class cls)
+        {
+            var result = _context.Class.Where(x=>x.SUBJECTID == cls.SUBJECTID && x.COURSEID == cls.COURSEID).ToList();
+            if (result.Count == 0)
+            {
+                return false;
+            } return true;
         }
     }
 }
