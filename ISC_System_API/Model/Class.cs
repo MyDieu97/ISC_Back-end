@@ -15,6 +15,7 @@ namespace ISC_System_API.Model
         public int Id { get; set; }
         [Required]
         public Nullable<int> COURSEID { get; set; }
+        [Required]
         public Nullable<int> SUBJECTID { get; set; }
         [Column("CLASSNAME")]
         [StringLength(200)]
@@ -22,9 +23,8 @@ namespace ISC_System_API.Model
         [Column("PERCENTBANNEDTEST")] 
         public Nullable<double> PercentBan { get; set; } 
         public Nullable<double> PASSINGSCORE { get; set; }
-        public virtual ICollection<LearningResult> LEARNINGRESULTs { get; set; }
+        public Boolean ISDELETE { get; set; }
         public virtual Course COURSE { get; set; }
         public virtual Subject SUBJECT { get; set; }
-        public virtual ICollection<LecturerClasses> LECTURER_CLASSES { get; set; }
     }
 }

@@ -127,8 +127,6 @@ namespace ISC_System_API.Controllers
                 ErrorCode = 1,
                 Message = "Delete fail"
             };
-
-
         }
     }
 }
