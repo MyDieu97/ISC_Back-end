@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ISC_System_API.Model;
 using ISC_System_API.Model.Respone;
 using ISC_System_API.Respone;
+using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,9 +19,12 @@ namespace ISC_System_API.Controllers
     public class AdminsController : Controller
     {
         private readonly Context _db;
-        public AdminsController(Context db)
+        private readonly HostingEnvironment _hostingEnvironment;
+
+        public AdminsController(Context db, HostingEnvironment hostingEnvironment)
         {
             _db = db;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         // GET: api/admins
@@ -50,7 +55,7 @@ namespace ISC_System_API.Controllers
 
         // POST: api/admin
         [HttpPost]
-        public async Task<ActionResult<BaseRespone>> Post(ADMIN admin)
+        public async Task<ActionResult<BaseRespone>> Post([FromForm]ADMIN admin)
         {
             var ad = await _db.Admins.Where(x => x.Adminid == admin.Adminid).FirstOrDefaultAsync();
 
@@ -63,15 +68,47 @@ namespace ISC_System_API.Controllers
                 };
             }
 
-            _db.Admins.Add(admin);
-            await _db.SaveChangesAsync();
-
-            CreatedAtAction("Get", new { id = admin.Adminid }, admin);
-            return new BaseRespone
+            try
             {
-                Message = "post is successful",
-                Data = admin
-            };
+                var file = admin.Image;
+                _db.Admins.Add(admin);
+                await _db.SaveChangesAsync();
+                if (file != null)
+                {
+                    string newFileName = admin.Adminid + "_" + file.FileName;
+                    string path = _hostingEnvironment.WebRootPath + "\\Image\\" + newFileName;
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                        admin.ImageName = newFileName;
+                        _db.Entry(admin).Property(x => x.ImageName).IsModified = true;
+                        _db.SaveChanges();
+                    }
+                }
+                return new BaseRespone
+                {
+                    Message = "Added successfully",
+                    Data = admin
+                };
+            }
+            catch
+            {
+                return new BaseRespone
+                {
+                    ErrorCode = 1,
+                    Message = "Error"
+                };
+            }
+
+            //_db.Admins.Add(admin);
+            //await _db.SaveChangesAsync();
+
+            //CreatedAtAction("Get", new { id = admin.Adminid }, admin);
+            //return new BaseRespone
+            //{
+            //    Message = "post is successful",
+            //    Data = admin
+            //};
         }
 
         // PUT: api/admin/id

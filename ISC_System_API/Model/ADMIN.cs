@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,5 +16,9 @@ namespace ISC_System_API.Model
         public string Username { get; set; }
         public string Password { get; set; }
         public string Fullname { get; set; }
+        [NotMapped]
+        public IFormFile Image { get; set; }
+
+        public string ImageName { get; set; }
     }
 }
