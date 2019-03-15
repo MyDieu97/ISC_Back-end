@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ISC_System_API.Models;
-using ISC_System_API.Models.Respone;
+using ISC_System_API.Model;
+using ISC_System_API.Model.Respone;
+using ISC_System_API.Respone;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,8 +16,8 @@ namespace ISC_System_API.Controllers
 	[ApiController]
     public class AdminsController : Controller
     {
-        private readonly DatabaseContext _db;
-        public AdminsController(DatabaseContext db)
+        private readonly Context _db;
+        public AdminsController(Context db)
         {
             _db = db;
         }

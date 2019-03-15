@@ -64,7 +64,7 @@ namespace ISC_System_API.Controllers
 
                     return new BaseRespone(new LoginResponse
                     {
-                        AdminId = userLogin.AdminId,
+                        AdminId = userLogin.Adminid,
                         Username = userLogin.Username,
                         Password = userLogin.Password,
                         Token = "Bearer " + tokenString
