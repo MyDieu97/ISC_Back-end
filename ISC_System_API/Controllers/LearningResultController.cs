@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ISC_System_API.Controllers
 {
-    [Route("api/LearResult")]
+    [Route("api/LearnResult")]
     [ApiController]
     public class LearningResultController : Controller
     {
@@ -26,8 +26,8 @@ namespace ISC_System_API.Controllers
         public async Task<ActionResult<BaseRespone>> Get([FromQuery] LearningRequest req)
         {
             var learnignInfo = await _context.LearningResults.Include(p => p.CLASS).Include(p => p.STUDENT)
-                        .Include(p=>p.STUDENT.USER).AsNoTracking()
-                        .Where(p=>p.CLASSID == req.ClassId && p.CLASS.COURSEID == req.CourseId)
+                        .Include(p => p.STUDENT.USER).AsNoTracking()
+                        .Where(p => p.CLASSID == req.ClassId && p.CLASS.COURSEID == req.CourseId)
                         .Select(x => new LearningResultInfo
                         {
                             ClassId = x.CLASS.Id,
@@ -36,7 +36,8 @@ namespace ISC_System_API.Controllers
                             Id = x.ID,
                             StudenId = x.IDSTUDENT,
                             FirstName = x.STUDENT.USER.FIRSTNAME,
-                            LastName = x.STUDENT.USER.LASTNAME
+                            LastName = x.STUDENT.USER.LASTNAME,
+                            DoB = x.STUDENT.USER.DOB
                         }).ToListAsync();
             if(learnignInfo.Count == 0)
             {
@@ -49,9 +50,10 @@ namespace ISC_System_API.Controllers
             return new BaseRespone(learnignInfo);
         }
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<BaseRespone>> Get(int id)
         {
-            return "value";
+            var learn = await _context.LearningResults.FindAsync(id);
+            return new BaseRespone(learn);
         }
 
         // POST api/<controller>
