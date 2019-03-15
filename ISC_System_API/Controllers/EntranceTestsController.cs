@@ -28,7 +28,7 @@ namespace ISC_System_API.Controllers
                     COURSEID = x.COURSEID,
                     Id = x.Id,
                     TESTDATE = x.TESTDATE,
-                    CoureName = x.COURSES.Name
+                    CourseName = x.COURSES.Name
                 }).ToListAsync();
             return new BaseRespone(data);
         }

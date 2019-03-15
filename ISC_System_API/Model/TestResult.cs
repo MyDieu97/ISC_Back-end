@@ -14,13 +14,14 @@ namespace ISC_System_API.Model
         [Column("Result_ID")]
         public int Id { get; set; }
         [Required]
-        public Nullable<int> SubjectID { get; set; }
-        [Required]
         public Nullable<int> UserID { get; set; }
-        public Nullable<int> EntranceTestID { get; set; }
-        public Nullable<double> Score { get; set; }
+        public double Score { get; set; }
         public Nullable<bool> IsPassing { get; set; }
-        public virtual SubjectEntranceTest SUBJECTS_ENTRANCETESTS { get; set; }
+        public int Subject_EntranceTestID { get; set; }
+        [ForeignKey("UserID")]
         public virtual User USER { get; set; }
+        [ForeignKey("Subject_EntranceTestID")]
+        public virtual SubjectEntranceTest SubjectEntranceTest { get; set; }
+
     }
 }

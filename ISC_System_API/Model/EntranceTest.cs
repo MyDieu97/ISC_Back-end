@@ -15,9 +15,9 @@ namespace ISC_System_API.Model
         public int Id { get; set; }
         [Required]
         public Nullable<int> COURSEID { get; set; }
-        public Nullable<System.DateTime> TESTDATE { get; set; }
+        public DateTime TESTDATE { get; set; }
 
+        [ForeignKey("COURSEID")]
         public virtual Course COURSES { get; set; }
-        public virtual SubjectEntranceTest SUBJECTS_ENTRANCETESTS { get; set; }
     }
 }

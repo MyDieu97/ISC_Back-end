@@ -10,6 +10,6 @@ namespace ISC_System_API.Respone
         public int Id { get; set; }
         public Nullable<int> COURSEID { get; set; }
         public Nullable<System.DateTime> TESTDATE { get; set; }
-        public string CoureName { get; set; }
+        public string CourseName { get; set; }
     }
 }
