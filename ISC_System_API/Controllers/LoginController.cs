@@ -67,6 +67,7 @@ namespace ISC_System_API.Controllers
                         AdminId = userLogin.Adminid,
                         Username = userLogin.Username,
                         Password = userLogin.Password,
+                        Fullname = userLogin.Fullname,
                         Token = "Bearer " + tokenString
                     });
                 }
