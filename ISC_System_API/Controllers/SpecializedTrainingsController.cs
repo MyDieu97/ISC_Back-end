@@ -9,6 +9,7 @@ using ISC_System_API;
 using ISC_System_API.Model;
 using Microsoft.AspNetCore.Authorization;
 using ISC_System_API.Respone;
+using ISC_System_API.Model.Respone;
 
 namespace ISC_System_API.Controllers
 {
@@ -24,25 +25,66 @@ namespace ISC_System_API.Controllers
         }
 
         // GET: api/SpecializedTrainings
+        //[HttpGet]
+        //public async Task<ActionResult<BaseRespone>> GetAllSpecializedTrainings()
+        //{
+        //    List<SpecializedTraining> list = await _context.SpecializedTrainings
+        //        .AsNoTracking()
+        //        .Select(x => new SpecializedTraining
+        //        {
+        //            TrainingId = x.TrainingId,
+        //            Name = x.Name,
+        //            NUMBERWEEK = x.NUMBERWEEK
+        //        })
+        //        .ToListAsync();
+        //    BaseRespone result = new BaseRespone();
+        //    if (list != null)
+        //    {
+        //        result.ErrorCode = 0;
+        //        result.Data = list;
+        //    }
+        //    else {
+        //        result.ErrorCode = 1;
+        //        result.Message = "Data is not available!";
+        //    }
+        //    return result;
+        //}
+
+        //[Route("GetAllWithSubject")]
         [HttpGet]
-        public async Task<ActionResult<BaseRespone>> GetAllSpecializedTrainings()
+        public async Task<ActionResult<BaseRespone>> GetWithSubject()
         {
-            List<SpecializedTraining> list = await _context.SpecializedTrainings
+            List<SpecTrainingInfo> list = await _context.SpecializedTrainings
                 .AsNoTracking()
-                .Select(x => new SpecializedTraining
+                .Select(x => new SpecTrainingInfo
                 {
                     TrainingId = x.TrainingId,
                     Name = x.Name,
-                    NUMBERWEEK = x.NUMBERWEEK
+                    NumberofWeeks = x.NumberofWeeks
                 })
                 .ToListAsync();
+            foreach (SpecTrainingInfo item in list)
+            {
+                item.listSubjects = await _context.TrainingSubject
+                    .AsNoTracking()
+                    .Where(x => x.TrainingId == item.TrainingId)
+                    .Select(x => new Subject
+                    {
+                        SubjectId = x.SubjectId,
+                        Subjectname = x.SUBJECTS.Subjectname,
+                        NUMBERLESSON = x.SUBJECTS.NUMBERLESSON
+                    })
+                    .ToListAsync();
+            }
+              
             BaseRespone result = new BaseRespone();
             if (list != null)
             {
                 result.ErrorCode = 0;
                 result.Data = list;
             }
-            else {
+            else
+            {
                 result.ErrorCode = 1;
                 result.Message = "Data is not available!";
             }
@@ -56,13 +98,24 @@ namespace ISC_System_API.Controllers
             BaseRespone result = new BaseRespone();
             var item = await _context.SpecializedTrainings
                 .AsNoTracking()
-                .Select(x => new SpecializedTraining
+                .Select(x => new SpecTrainingInfo
                 {
                     TrainingId = x.TrainingId,
                     Name = x.Name,
-                    NUMBERWEEK = x.NUMBERWEEK
+                    NumberofWeeks = x.NumberofWeeks
                 })
                 .FirstOrDefaultAsync(x => x.TrainingId == id);
+
+            item.listSubjects = await _context.TrainingSubject
+                    .AsNoTracking()
+                    .Where(x => x.TrainingId == item.TrainingId)
+                     .Select(x => new Subject
+                     {
+                         SubjectId = x.SubjectId,
+                         Subjectname = x.SUBJECTS.Subjectname,
+                         NUMBERLESSON = x.SUBJECTS.NUMBERLESSON
+                     })
+                    .ToListAsync();
 
             if (item == null)
             {
@@ -74,6 +127,18 @@ namespace ISC_System_API.Controllers
                 result.Data = item;
             }
             return result;
+        }
+
+        [Route("getthelast")]
+        [HttpGet]
+        public async Task<ActionResult<BaseRespone>> GetTheLast()
+        {
+            var item = await _context.SpecializedTrainings.LastAsync();
+
+            return new BaseRespone {
+                ErrorCode = 0,
+                Data = item
+            };
         }
 
         // PUT: api/SpecializedTrainings/5

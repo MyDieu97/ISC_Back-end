@@ -14,5 +14,6 @@ namespace ISC_System_API.Respone
         public string ClassName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public DateTime DoB { get; set; }
     }
 }

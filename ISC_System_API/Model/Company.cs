@@ -15,9 +15,9 @@ namespace ISC_System_API.Model
         public int Id { get; set; }
         [Column("COMPANYNAME")]
         [StringLength(200)]
-        public string Name { get; set; }
+        public string NAME { get; set; }
         public string DIACHI { get; set; }
-        public string CONTECTPERSON { get; set; }
+        public string CONTACTPERSON { get; set; }
         [Phone]
         public string PHONE { get; set; }
         public Nullable<byte> STATUS { get; set; }

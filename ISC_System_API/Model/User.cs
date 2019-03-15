@@ -18,7 +18,7 @@ namespace ISC_System_API.Model
         [StringLength(200)]
         public string LASTNAME { get; set; }
         public Nullable<byte> GENDER { get; set; }
-        public Nullable<System.DateTime> DOB { get; set; }
+        public DateTime DOB { get; set; }
         public string IDENTITYNUMBER { get; set; }
         [EmailAddress]
         public string EMAIL { get; set; }
